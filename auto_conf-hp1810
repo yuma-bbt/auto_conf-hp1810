@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+import sys
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from time import sleep
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("target", type=str,
+                            help="target")
+
+parser.add_argument("vlan_range", type=str,
+                            help="vlan_range")
+
+parser.add_argument("step", type=str,
+                            help="step")
+
+parser.add_argument("-p", "--password", type=str,
+                            help="target switch password")
+
+parser.add_argument("-t", "--target", action="store_true",
+                            help="target IP")
+
+
+parser.add_argument("-a", "--add", action="store_true",
+                            help="increase output verbosity")
+
+
+
+
+
+
+args = parser.parse_args()
+
+
+target = ""
+password = ""
+from_vlan = ""
+to_vlan = ""
+incre_val = ""
+
+val_range_vlan = args.vlan_range
+array_range_vlan = val_range_vlan.split("-")
+from_vlan = array_range_vlan[0]
+to_vlan   = array_range_vlan[1]
+step = int(args.step)
+password = args.password
+
+
+
+
+val_range_vlan = args.vlan_range
+array_range_vlan = val_range_vlan.split("-")
+p = argparse.ArgumentParser()
+driver = webdriver.Chrome()
+driver.get("http://"+ args.target +"/login.htm")
+driver.find_element_by_id("passwd").send_keys(password)
+driver.find_element_by_id("login").click()
+sleep(2)
+print(array_range_vlan)
+for i in range(int(array_range_vlan[0]),int(array_range_vlan[1])+1,step):
+    print(i)
+
+    driver.get("http://" + args.target + "/vlan.htm")
+    sleep(2)
+    driver.find_element_by_id("create").click()
+    sleep(2)
+    driver.find_element_by_id("new_vid").send_keys(i)
+    sleep(2)
+    driver.find_element_by_id("buttonsTbl").click()
+    sleep(2)
+driver.close()
+driver.quit()
+
+
+
